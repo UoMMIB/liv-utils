@@ -295,6 +295,13 @@ class ICEClient():
 
         return _read_resp(net_utils.get(url, self.__headers))
 
+    def search_example_entry(self):
+        '''Test search of ICE. Returns random entry'''
+
+        url = self.__url + '/rest/search?offset=0&limit=1'
+
+        return _read_resp(net_utils.get(url, self.__headers))
+
     def advanced_search(self, term, entry_type, limit=5):
         '''Searches ICE.'''
         data = {
@@ -361,7 +368,10 @@ class ICEClient():
 
     def __get_id_format(self):
         '''Get id format. NOTE: this will fail with an empty repository!'''
-        resp = self.search('term')
+        # WE - 22/10/2021 - remove search term as this was not consistently returning a result 
+        # even when valid entries.
+        #resp = self.search('term') 
+        resp = self.search_example_entry()
         ice_id = resp['results'][0]['entryInfo']['partId']
         digit_idx = re.search(r'\d', ice_id).start()
         id_prefix = ice_id[:digit_idx]
